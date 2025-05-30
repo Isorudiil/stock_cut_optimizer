@@ -1,12 +1,11 @@
-"""
-Tube cut optimizer
+""" Stock Cutting Optimizer
 Designed to solve the cutting stock problem
 
 - Elijah Herald
 """
 
 
-"""
+""" Pseudocode/Flowcharting
 Inputs:
 - Stock size(s)
 - Stock quantity
@@ -77,20 +76,23 @@ if __name__ == '__main__':
         print("6. Nest using longest parts first")
         print("7. Exit program\n")
 
-        stock_list
+        stock_list = []
 
         number = int(input())
         if number not in options:
             print("You either entered an invalid number\nor did not enter a number at all\n")
         elif number == 1:
-            stock_list = stock_parts()
+            material = input("What is your material called?\n")
+            length = input("How long is your material?\n")
+            quantity = input("How many pieces of %s do you have?\n" % material)
+            new_stock = StockMaterial(material, int(length), int(quantity))
         elif number == 2:
             pass
         elif number == 3:
             try:
                 print("\n     *********      ")
                 print("Here is your current stock:")
-                print(stock_list)
+                print([str(material) for material in StockMaterial.stock_list])
                 print("     *********      \n")
             except NameError:
                 print("\n      *********     ")
