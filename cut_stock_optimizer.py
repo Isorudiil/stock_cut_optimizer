@@ -39,34 +39,42 @@ General program process:
 - Output total quantity of tubes, total scrap, avg scrap, "nest" layouts, and quantity of each "nest" layout
 """
 
-from material_class import StockMaterial
+import material_class
 
-def stock_parts():
-    stock = []
-    more_stock = True
+# def stock_parts(option): # loops through the stock part creation sequence
+#     # if option == 1:
+#     #     temp = "stock material"
+#     # elif option == 2:
+#     #     temp = "cut material"
 
-    while more_stock == True:
-        stock_name = input("What is your stock material called?\n")
-        stock_length = input("How long is your stock length?\n")
-        stock_quantity = input("How many pieces of %s do you have?\n" % stock_name)
-        stock_dict = {stock_name: [{"Length": int(stock_length)}, {"Quantity": int(stock_quantity)}]}
-        stock.append(stock_dict)
+#     # if stock or cut:
+#     #     print("You have already entered %s, would you like to enter more?" % temp)
 
-        while True:
-            more = input("Do you have more stock to input? (yes or no)\n")
-            if more.lower() == 'y' or more.lower() == 'yes':
-                more_stock = True
-                break
-            elif more.lower() == 'n' or more.lower() == 'no':
-                more_stock = False
-                return stock
-            else:
-                print("You did not input 'yes' or 'no'. Please try again.")
+#     # if option == 1:
+#     stock = []
+#     # elif option == 2:
+#     #     cut = []
+#     more_stock = True
 
+#     while more_stock == True:
+#         name = input("What is your stock material called?\n")
+#         length = input("How long is your stock length?\n")
+#         quantity = input("How many pieces of %s do you have?\n" % name)
+#         init_dict = {name: [{"Length": int(length)}, {"Quantity": int(quantity)}]}
+#         stock.append(init_dict)
 
-if __name__ == '__main__':
-    while True:
-        options = [1, 2, 3, 4, 5, 6, 7,]
+#         while True:
+#             more = input("Do you have more stock to input? (yes or no)\n")
+#             if more.lower() == 'y' or more.lower() == 'yes':
+#                 more_stock = True
+#                 break
+#             elif more.lower() == 'n' or more.lower() == 'no':
+#                 more_stock = False
+#                 return stock
+#             else:
+#                 print("You did not input 'yes' or 'no'. Please try again.")
+
+def hello(): # prints the opening message when the User starts the program
         print("\nWhat would you like to do? (Type the number)\n")
         print("1. Add stock material")
         print("2. Add to cut list")
@@ -76,23 +84,45 @@ if __name__ == '__main__':
         print("6. Nest using longest parts first")
         print("7. Exit program\n")
 
-        stock_list = []
+def goodbye(): # prints the exit message when the User requests to quit the program
+    print("    *********    ")
+    print("Have a great day!")
+    print("    *********    ")
+
+def base_questions(option): # basic questions that apply to stock and cut material
+    if option == 1:
+        operation = 'material'
+    elif option == 2:
+        operation = 'cut piece'
+    
+    material = input("What is your %s called?\n" % operation)
+    length = float(input("How long is your %s?\n" % operation))
+    if option == 1:
+        quantity = int(input("How many pieces of %s do you have?\n" % material))
+    elif option == 2:
+        quantity = int(input("How many pieces of %s do you have to cut?\n" % material))
+
+    return (material, length, quantity)
+
+def main_loop(): # main program loop
+    while True:
+        options = [1, 2, 3, 4, 5, 6, 7,]
+        hello()
 
         number = int(input())
         if number not in options:
             print("You either entered an invalid number\nor did not enter a number at all\n")
         elif number == 1:
-            material = input("What is your material called?\n")
-            length = input("How long is your material?\n")
-            quantity = input("How many pieces of %s do you have?\n" % material)
-            new_stock = StockMaterial(material, int(length), int(quantity))
+            stock_info = base_questions(number)
+            new_stock = material_class.StockMaterial(*stock_info)
         elif number == 2:
-            pass
+            stock_info = base_questions(number)
+            new_cut = material_class.CutMaterial(*stock_info)
         elif number == 3:
             try:
                 print("\n     *********      ")
                 print("Here is your current stock:")
-                print([str(material) for material in StockMaterial.stock_list])
+                print([str(material) for material in material_class.StockMaterial.stock_list])
                 print("     *********      \n")
             except NameError:
                 print("\n      *********     ")
@@ -100,13 +130,23 @@ if __name__ == '__main__':
                 print("      *********     \n")
 
         elif number == 4:
-            pass
+            try:
+                print("\n     *********      ")
+                print("Here is your current cut list:")
+                print([str(material) for material in material_class.CutMaterial.cut_list])
+                print("     *********      \n")
+            except NameError:
+                print("\n      *********     ")
+                print("You have no cut list yet!")
+                print("      *********     \n")
         elif number == 5:
             pass
         elif number == 6:
             pass
         elif number == 7:
-            print("    *********    ")
-            print("Have a great day!")
-            print("    *********    ")
+            goodbye()
             break
+
+
+if __name__ == '__main__':
+    main_loop()
