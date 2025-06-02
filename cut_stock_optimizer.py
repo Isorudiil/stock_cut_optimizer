@@ -39,40 +39,9 @@ General program process:
 - Output total quantity of tubes, total scrap, avg scrap, "nest" layouts, and quantity of each "nest" layout
 """
 
-import material_class
+import material_class as m_c
+import pyinputplus as pyip
 
-# def stock_parts(option): # loops through the stock part creation sequence
-#     # if option == 1:
-#     #     temp = "stock material"
-#     # elif option == 2:
-#     #     temp = "cut material"
-
-#     # if stock or cut:
-#     #     print("You have already entered %s, would you like to enter more?" % temp)
-
-#     # if option == 1:
-#     stock = []
-#     # elif option == 2:
-#     #     cut = []
-#     more_stock = True
-
-#     while more_stock == True:
-#         name = input("What is your stock material called?\n")
-#         length = input("How long is your stock length?\n")
-#         quantity = input("How many pieces of %s do you have?\n" % name)
-#         init_dict = {name: [{"Length": int(length)}, {"Quantity": int(quantity)}]}
-#         stock.append(init_dict)
-
-#         while True:
-#             more = input("Do you have more stock to input? (yes or no)\n")
-#             if more.lower() == 'y' or more.lower() == 'yes':
-#                 more_stock = True
-#                 break
-#             elif more.lower() == 'n' or more.lower() == 'no':
-#                 more_stock = False
-#                 return stock
-#             else:
-#                 print("You did not input 'yes' or 'no'. Please try again.")
 
 def hello(): # prints the opening message when the User starts the program
         print("\nWhat would you like to do? (Type the number)\n")
@@ -95,54 +64,83 @@ def base_questions(option): # basic questions that apply to stock and cut materi
     elif option == 2:
         operation = 'cut piece'
     
-    material = input("What is your %s called?\n" % operation)
-    length = float(input("How long is your %s?\n" % operation))
+    material = pyip.inputStr("What is your %s called?\n" % operation)
+    length = pyip.inputNum("How long is your %s?\n" % operation)
     if option == 1:
-        quantity = int(input("How many pieces of %s do you have?\n" % material))
+        quantity = pyip.inputNum("How many pieces of %s do you have?\n" % material)
     elif option == 2:
-        quantity = int(input("How many pieces of %s do you have to cut?\n" % material))
+        quantity = pyip.inputNum("How many pieces of %s do you have to cut?\n" % material)
 
     return (material, length, quantity)
 
+def material_list(option, stock_materials, cut_materials): # try block to view a material list, if it exists
+    if option == 3:
+        operation = 'stock'
+    elif option == 4:
+        operation = 'cut list'
+    elif option == 5:
+        operation = 'stock and cut list'
+        
+    print("\n     *********      ")
+    print("Here is your current %s:" % operation)
+    if option == 3:
+        for material in stock_materials:
+            print(material)
+    elif option == 4:
+        for material in cut_materials:
+            print(material)
+    elif option == 5:
+        print("Stock:")
+        for material in stock_materials:
+            print(material)
+        print("\nCut:")
+        for material in cut_materials:
+            print(material)
+    print("     *********      \n")
+
+def nest_longest_parts_first(stock_list, cut_list):
+    print("\nAttempting to nest with:")
+    print("Stock materials:")
+    for stock in stock_list:
+        print(stock)
+    print("\nCut materials:")
+    for cut in cut_list:
+        print(cut)
+    
+    """ Pseudocode
+    Sort cut_list in descending order
+    For loop to iterate through qty of stock_list
+    While loop to fit from cut_list until no more can fit
+    * Can I fit a smaller piece on if I know it will fit better?
+    """
+
+    
+
+    print("\n")
+
 def main_loop(): # main program loop
+    all_stock_materials = []
+    all_cut_materials = []
+
     while True:
         options = [1, 2, 3, 4, 5, 6, 7,]
         hello()
 
-        number = int(input())
-        if number not in options:
-            print("You either entered an invalid number\nor did not enter a number at all\n")
-        elif number == 1:
-            stock_info = base_questions(number)
-            new_stock = material_class.StockMaterial(*stock_info)
-        elif number == 2:
-            stock_info = base_questions(number)
-            new_cut = material_class.CutMaterial(*stock_info)
-        elif number == 3:
-            try:
-                print("\n     *********      ")
-                print("Here is your current stock:")
-                print([str(material) for material in material_class.StockMaterial.stock_list])
-                print("     *********      \n")
-            except NameError:
-                print("\n      *********     ")
-                print("You have no stock yet!")
-                print("      *********     \n")
-
-        elif number == 4:
-            try:
-                print("\n     *********      ")
-                print("Here is your current cut list:")
-                print([str(material) for material in material_class.CutMaterial.cut_list])
-                print("     *********      \n")
-            except NameError:
-                print("\n      *********     ")
-                print("You have no cut list yet!")
-                print("      *********     \n")
-        elif number == 5:
-            pass
+        number = pyip.inputInt(greaterThan=0, lessThan=8)
+        if 0 < number < 3:
+            material_info = base_questions(number)
+            if number == 1:
+                new_stock = m_c.StockMaterial(*material_info)
+                all_stock_materials.append(new_stock)
+                print(f"\nAdded: {new_stock.quantity} pieces of {new_stock.name} ({new_stock.length}in)\n")
+            elif number == 2:
+                new_cut = m_c.CutMaterial(*material_info)
+                all_cut_materials.append(new_cut)
+                print(f"\nAdded: {new_cut.quantity} pieces of {new_cut.name} ({new_cut.length}in) to cut list\n")
+        elif 2 < number < 6:
+            material_list(number, all_stock_materials, all_cut_materials)
         elif number == 6:
-            pass
+            nest_longest_parts_first(all_stock_materials, all_cut_materials)
         elif number == 7:
             goodbye()
             break
