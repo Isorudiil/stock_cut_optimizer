@@ -100,6 +100,7 @@ def material_list(option, stock_materials, cut_materials): # try block to view a
 
 def nest_longest_parts_first(stock_list, cut_list):
     print("\nAttempting to nest with:")
+    pritn("------")
     print("Stock materials:")
     for stock in stock_list:
         print(stock)
@@ -114,7 +115,11 @@ def nest_longest_parts_first(stock_list, cut_list):
     * Can I fit a smaller piece on if I know it will fit better?
     """
 
-    
+    cut_list.sort(key=lambda cut_part: cut_part.length, reverse=True)
+    print("------")
+    print("\nSorted by length (descending):")
+    for part in cut_list:
+        print(part)    
 
     print("\n")
 
