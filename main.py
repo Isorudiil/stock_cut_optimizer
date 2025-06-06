@@ -54,9 +54,9 @@ def hello(): # prints the opening message when the User starts the program
         print("7. Exit program\n")
 
 def goodbye(): # prints the exit message when the User requests to quit the program
-    print("    *********    ")
+    print("\n------")
     print("Have a great day!")
-    print("    *********    ")
+    print("------")
 
 def base_questions(option): # basic questions that apply to stock and cut material
     if option == 1:
@@ -81,7 +81,7 @@ def material_list(option, stock_materials, cut_materials): # try block to view a
     elif option == 5:
         operation = 'stock and cut list'
         
-    print("\n     *********      ")
+    print("\n------")
     print("Here is your current %s:" % operation)
     if option == 3:
         for material in stock_materials:
@@ -96,18 +96,19 @@ def material_list(option, stock_materials, cut_materials): # try block to view a
         print("\nCut:")
         for material in cut_materials:
             print(material)
-    print("     *********      \n")
+    print("------\n")
 
 def nest_longest_parts_first(stock_list, cut_list):
     print("\nAttempting to nest with:")
-    pritn("------")
+    print("------")
     print("Stock materials:")
     for stock in stock_list:
         print(stock)
     print("\nCut materials:")
     for cut in cut_list:
         print(cut)
-    
+    print("------")
+
     """ Pseudocode
     Sort cut_list in descending order
     For loop to iterate through qty of stock_list
@@ -116,12 +117,23 @@ def nest_longest_parts_first(stock_list, cut_list):
     """
 
     cut_list.sort(key=lambda cut_part: cut_part.length, reverse=True)
-    print("------")
-    print("\nSorted by length (descending):")
+    print("\n------")
+    print("Sorted by length (descending):")
     for part in cut_list:
         print(part)    
+    print("------")
 
-    print("\n")
+    temp_cut_list = cut_list
+    temp_stock_list = stock_list
+
+    for stock in temp_stock_list:
+        while stock.quantity > 0:
+            while stock.length > 0:
+                temp_stock_length = stock.length
+                for length in temp_cut_list.length:
+                    if length < temp_stock_length:
+                        temp_cut_list[length].qty -= 1
+                        break
 
 def main_loop(): # main program loop
     all_stock_materials = []
