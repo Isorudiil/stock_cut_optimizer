@@ -4,7 +4,6 @@ Designed to solve the cutting stock problem
 - Elijah Herald
 """
 
-
 """ Pseudocode/Flowcharting
 Inputs:
 - Stock size(s)
@@ -128,8 +127,8 @@ def nest_longest_parts_first(stock_list, cut_list):
 
     for stock in temp_stock_list:
         while stock.quantity > 0:
+            temp_stock_length = stock.length
             while stock.length > 0:
-                temp_stock_length = stock.length
                 for length in temp_cut_list.length:
                     if length < temp_stock_length:
                         temp_cut_list[length].qty -= 1
